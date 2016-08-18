@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <title>快递查询</title>
+    <link rel="stylesheet" href="http://g.alicdn.com/msui/sm/0.6.2/css/sm.min.css">
+    <script type='text/javascript' src='http://g.alicdn.com/sj/lib/zepto/zepto.min.js' charset='utf-8'></script>
+    <script type='text/javascript' src='http://g.alicdn.com/msui/sm/0.6.2/js/sm.min.js' charset='utf-8'></script>
+</head>
+
+<body>
+    <div class="content">
+        <div class="list-block">
+            <ul>
+                <li>
+                    <div class="item-content">
+                        <div class="item-media"><i class="icon icon-browser"></i></div>
+                        <div class="item-inner">
+                            <div class="item-title label">快递公司</div>
+                            <div class="item-input">
+                                <input id="input-express-name" type="text" placeholder="选择快递公司" class="open-panel" readonly>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <div class="item-content">
+                        <div class="item-media"><i class="icon icon-card"></i></div>
+                        <div class="item-inner">
+                            <div class="item-title label">快递单号</div>
+                            <div class="item-input">
+                                <input id="input-express-num" type="text" placeholder="填写快递运单号">
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class="content-block">
+            <div class="row">
+                <div class="col-50"><a href="#" id="btn-clear" class="button button-big button-fill button-danger">重置</a></div>
+                <div class="col-50"><a href="#" id="btn-submit" class="button button-big button-fill button-success">查询</a></div>
+            </div>
+        </div>
+    </div>
+    <!-- 侧栏 -->
+    <div class="panel panel-left panel-cover theme-dark" id="panel-left">
+        <div class="content-block-title">选择快递公司</div>
+        <div class="list-block">
+            <ul id="express-name-list"></ul>
+        </div>
+    </div>
+    <script type='text/javascript' src='http://g.alicdn.com/sj/lib/zepto/zepto.min.js' charset='utf-8'></script>
+    <script type='text/javascript' src='http://g.alicdn.com/msui/sm/0.6.2/js/sm.min.js' charset='utf-8'></script>
+    <script type="text/javascript">
+    var expressNames = ['顺丰速运', '申通快递', '韵达快递', '中通快递', '圆通快递', '德邦物流', 'EMS', '联邦快递', '如风达', '天天快递', '万家物流', '万象物流'];
+    var type = ['shunfeng', 'shentong', 'yunda', 'zhongtong', 'yuantong', 'debangwuliu', 'ems', 'lianb', 'rufengda', 'tiantian', 'wanjiawuliu', 'wxwl'];
+    var selectedExpressType = null; //选择的物流公司type值
+    showExpressNames();
+
+    //点击页面content部分关闭侧边栏
+    $('div.content').click(function() {
+        $.closePanel();
+    });
+
+    //重置表单
+    $('#btn-clear').click(function() {
+        $('#input-express-name').val('');
+        $('#input-express-num').val('');
+    });
+
+    //提交表单
+    $('#btn-submit').click(function() {
+        if(selectedExpressType == null) {
+            alert('请选择快递公司');
+        } else if(!isExpressNumValid()) {
+            alert('运单号不正确');
+        }else {
+            //跳转到查询结果页面
+            window.location.href = "http://m.kuaidi100.com/index_all.html?type=" + selectedExpressType + "&postid=" + $('#input-express-num').val();
+        }
+    });
+
+    //显示物流公司名称列表
+    function showExpressNames() {
+        var html = '';
+        for(var i = 0; i < expressNames.length; i++) {
+            html += '<li class="item-content item-link express-name-list-item">\
+                        <span style="display: none;">' + type[i] + '</span>\
+                        <div class="item-inner">\
+                            <div class="item-title">' + expressNames[i] + '</div>\
+                        </div>\
+                    </li>';
+        }
+        $('#express-name-list').html(html);
+        $('.express-name-list-item').click(function() {
+            var name = $(this).find('div.item-title').text();
+            selectedExpressType = $(this).find('span').text();
+            $('#input-express-name').val(name);
+            $.closePanel();
+        });
+    }
+
+    //判断运单号是否合法
+    function isExpressNumValid() {
+        var num = $('#input-express-num').val();
+        var reg = /^\d+$/;
+        return reg.test(num);       
+    }
+    </script>
+</body>
+
+</html>
+<!--
