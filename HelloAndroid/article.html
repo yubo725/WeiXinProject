@@ -12,6 +12,12 @@
     <link rel="stylesheet" href="http://g.alicdn.com/msui/sm/0.6.2/css/sm-extend.min.css">
     <script type='text/javascript' src='http://g.alicdn.com/sj/lib/zepto/zepto.min.js' charset='utf-8'></script>
     <script type='text/javascript' src='http://g.alicdn.com/msui/sm/0.6.2/js/sm.min.js' charset='utf-8'></script>
+    <style>
+        .content {
+            padding-top: 0;
+            margin-top: 0;
+        }
+    </style>
 </head>
 
 <body>
@@ -35,8 +41,18 @@
         function showCategory() {
             $.ajax({
                 type: 'GET',
-                url: 'http://apicloud.mob.com/wx/article/category/query?key=15079f718e8b0',
+                url: 'http://1.yubo725.sinaapp.com/test.php?url=http://apicloud.mob.com/wx/article/category/query?key=15079f718e8b0',
                 success: function(response) {
+                    var str = JSON.stringify(response);
+                    var reg = new RegExp("seperator.*");
+                    str = str.replace(reg, "");
+                    str = str.substring(1, str.length);
+                    while(str.indexOf("\\") != -1) {
+                        str = str.replace("\\", "");
+                    }
+                    console.log("response = " + str);
+                    response = JSON.parse(str);
+                    console.error("code = " + response.retCode);
                     if(response != null && response.retCode == 200) {
                         var result = response.result;
                         if(result != null && result.length > 0) {
